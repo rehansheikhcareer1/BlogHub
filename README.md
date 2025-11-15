@@ -10,7 +10,7 @@ A modern, feature-rich blog platform built with Django that provides complete bl
 
 ## ✨ Key Features
 
-### 🎯 Core Functionality
+### 💻 Core Functionality
 - ✅ **User Authentication** - Secure signup, login, logout with session management
 - ✅ **Blog Post Management** - Full CRUD operations (Create, Read, Update, Delete)
 - ✅ **Rich Text Editor** - CKEditor 5 with image upload, formatting, tables
@@ -40,7 +40,7 @@ A modern, feature-rich blog platform built with Django that provides complete bl
 
 ---
 
-## 🛠️ Tech Stack
+## ➡️ Tech Stack
 
 - **Backend**: Django 4.2.7, Python 3.11+
 - **Frontend**: HTML5, CSS3, JavaScript, Bootstrap 5
@@ -50,7 +50,7 @@ A modern, feature-rich blog platform built with Django that provides complete bl
 
 ---
 
-## 📦 Installation
+## 👨‍💻 Installation
 
 ### Prerequisites
 - Python 3.11 or higher
@@ -121,7 +121,7 @@ The project includes sample data script that creates:
 
 ---
 
-## 🎯 Usage Guide
+## 👨‍💻 Usage Guide
 
 ### For Writers
 1. **Sign up** for an account
@@ -198,7 +198,7 @@ blog-management/
 
 ---
 
-## 🚀 Deployment
+## 💻 Deployment
 
 ### Production Checklist
 
@@ -240,7 +240,7 @@ python manage.py collectstatic
 
 ---
 
-## 📝 License
+## ➡️ License
 
 This project is licensed under the MIT License.
 
@@ -249,10 +249,10 @@ This project is licensed under the MIT License.
 ## 👨‍💻 Developer
 
 **Rehan Sheikh**
-- 📧 Email: rehan.sheikh.career1@gmail.com
-- 📱 Phone: +91 7719984704
-- 💼 LinkedIn: [linkedin.com/in/therehansheikh](https://linkedin.com/in/therehansheikh)
-- 🐙 GitHub: [@rehansheikhcareer1](https://github.com/rehansheikhcareer1)
+- ✅ Email: rehan.sheikh.career1@gmail.com
+- ✅ Phone: +91 7719984704
+- ✅ LinkedIn: [linkedin.com/in/therehansheikh](https://linkedin.com/in/therehansheikh)
+- ✅ GitHub: [@rehansheikhcareer1](https://github.com/rehansheikhcareer1)
 
 ---
 
@@ -277,8 +277,8 @@ For questions or issues:
 
 <div align="center">
 
-### ⭐ If you find this project useful, please star it!
+### 👨‍💻 If you find this project useful, please star it!
 
-**Made with ❤️ by Rehan Sheikh**
+**Made with ❤️ by Rehan Sheikh** 👨‍💻
 
 </div>
