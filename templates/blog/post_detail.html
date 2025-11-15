@@ -1,0 +1,499 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ post.title }} - BlogHub{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Post detail page styles */
+    .post-header {
+        max-width: 900px;
+        margin: 0 auto 3rem;
+        text-align: center;
+    }
+    
+    .post-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 3rem;
+        font-weight: 900;
+        color: var(--text-dark);
+        margin-bottom: 1.5rem;
+        line-height: 1.2;
+    }
+    
+    .post-featured-image {
+        width: 100%;
+        max-height: 500px;
+        object-fit: cover;
+        border-radius: 20px;
+        margin-bottom: 2rem;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+    }
+    
+    .post-content-wrapper {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    
+    .post-content {
+        font-size: 1.1rem;
+        line-height: 1.9;
+        color: var(--text-dark);
+        margin-bottom: 3rem;
+    }
+    
+    .post-content p {
+        margin-bottom: 1.5rem;
+    }
+    
+    /* Engagement bar */
+    .engagement-bar {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        padding: 1.5rem;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+    }
+    
+    .engagement-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--text-light);
+        font-size: 0.95rem;
+    }
+    
+    .like-btn {
+        background: white;
+        border: 2px solid var(--border-color);
+        padding: 0.7rem 1.5rem;
+        border-radius: 25px;
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: 600;
+    }
+    
+    .like-btn:hover {
+        border-color: var(--primary-color);
+        background: rgba(20, 184, 166, 0.1);
+        transform: translateY(-2px);
+    }
+    
+    .like-btn.liked {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        border-color: transparent;
+        color: white;
+    }
+    
+    .like-btn.liked:hover {
+        transform: scale(1.05);
+    }
+    
+    /* Social share buttons */
+    .share-buttons {
+        display: flex;
+        gap: 1rem;
+        margin-left: auto;
+    }
+    
+    .share-btn {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        color: white;
+    }
+    
+    .share-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    }
+    
+    .share-twitter {
+        background: #1DA1F2;
+    }
+    
+    .share-facebook {
+        background: #4267B2;
+    }
+    
+    .share-linkedin {
+        background: #0077B5;
+    }
+    
+    .share-whatsapp {
+        background: #25D366;
+    }
+    
+    /* Comments section */
+    .comments-section {
+        max-width: 800px;
+        margin: 4rem auto;
+        padding-top: 3rem;
+        border-top: 2px solid var(--border-color);
+    }
+    
+    .comments-header {
+        font-family: 'Playfair Display', serif;
+        font-size: 2rem;
+        font-weight: 800;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    .comment-form {
+        background: white;
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        margin-bottom: 3rem;
+    }
+    
+    .comment-item {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 12px;
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+        margin-bottom: 1.5rem;
+    }
+    
+    .comment-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .comment-avatar {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 700;
+        font-size: 1.1rem;
+    }
+    
+    .comment-author {
+        font-weight: 700;
+        color: var(--text-dark);
+    }
+    
+    .comment-date {
+        color: var(--text-light);
+        font-size: 0.85rem;
+    }
+    
+    .comment-content {
+        color: var(--text-dark);
+        line-height: 1.6;
+    }
+    
+    .comment-delete-btn {
+        background: none;
+        border: none;
+        color: var(--danger);
+        cursor: pointer;
+        font-size: 0.9rem;
+        padding: 0.3rem 0.8rem;
+        border-radius: 5px;
+        transition: all 0.2s ease;
+    }
+    
+    .comment-delete-btn:hover {
+        background: rgba(239, 68, 68, 0.1);
+    }
+    
+    /* Author actions */
+    .author-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 2px solid var(--border-color);
+    }
+    
+    @media (max-width: 768px) {
+        .post-title {
+            font-size: 2rem;
+        }
+        
+        .engagement-bar {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        .share-buttons {
+            margin-left: 0;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="post-content-wrapper">
+        <!-- Post Header -->
+        <div class="post-header">
+            {% if post.category %}
+            <a href="{% url 'blog:category' post.category.slug %}" class="post-category-badge text-decoration-none">
+                {{ post.category.name }}
+            </a>
+            {% endif %}
+            
+            <h1 class="post-title">{{ post.title }}</h1>
+            
+            <div class="post-meta" style="justify-content: center;">
+                <div class="post-meta-item">
+                    <div class="author-avatar">
+                        {{ post.author.username|slice:":1"|upper }}
+                    </div>
+                    <span>{{ post.author.username }}</span>
+                </div>
+                <div class="post-meta-item">
+                    <i class="far fa-calendar"></i>
+                    <span>{{ post.published_at|date:"F d, Y" }}</span>
+                </div>
+                <div class="post-meta-item">
+                    <i class="far fa-clock"></i>
+                    <span>{{ post.reading_time }} min read</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Featured Image -->
+        {% if post.featured_image %}
+        <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" class="post-featured-image">
+        {% endif %}
+        
+        <!-- Engagement Bar -->
+        <div class="engagement-bar">
+            <button class="like-btn {% if user.is_authenticated and user in post.likes.all %}liked{% endif %}" 
+                    onclick="likePost('{{ post.slug }}')" 
+                    id="like-btn">
+                <i class="fas fa-heart"></i>
+                <span id="like-count">{{ post.total_likes }}</span>
+                <span>Like{{ post.total_likes|pluralize }}</span>
+            </button>
+            
+            <div class="engagement-item">
+                <i class="fas fa-eye"></i>
+                <span>{{ post.views }} view{{ post.views|pluralize }}</span>
+            </div>
+            
+            <div class="engagement-item">
+                <i class="fas fa-comment"></i>
+                <span>{{ comments.count }} comment{{ comments.count|pluralize }}</span>
+            </div>
+            
+            <!-- Social Share Buttons -->
+            <div class="share-buttons">
+                <button class="share-btn share-twitter" onclick="shareOnTwitter()" title="Share on Twitter">
+                    <i class="fab fa-twitter"></i>
+                </button>
+                <button class="share-btn share-facebook" onclick="shareOnFacebook()" title="Share on Facebook">
+                    <i class="fab fa-facebook-f"></i>
+                </button>
+                <button class="share-btn share-linkedin" onclick="shareOnLinkedIn()" title="Share on LinkedIn">
+                    <i class="fab fa-linkedin-in"></i>
+                </button>
+                <button class="share-btn share-whatsapp" onclick="shareOnWhatsApp()" title="Share on WhatsApp">
+                    <i class="fab fa-whatsapp"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Post Content -->
+        <div class="post-content">
+            {{ post.content|linebreaks }}
+        </div>
+        
+        <!-- Tags -->
+        {% if post.tags.all %}
+        <div class="mb-4">
+            <strong style="color: var(--text-light); margin-right: 1rem;">
+                <i class="fas fa-tags me-2"></i>Tags:
+            </strong>
+            {% for tag in post.tags.all %}
+            <span class="badge bg-secondary me-2" style="font-size: 0.9rem; padding: 0.5rem 1rem;">
+                {{ tag.name }}
+            </span>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <!-- Author Actions (Edit/Delete) -->
+        {% if user == post.author %}
+        <div class="author-actions">
+            <a href="{% url 'blog:post_update' post.slug %}" class="btn btn-warning">
+                <i class="fas fa-edit me-2"></i>Edit Post
+            </a>
+            <a href="{% url 'blog:post_delete' post.slug %}" class="btn btn-danger">
+                <i class="fas fa-trash me-2"></i>Delete Post
+            </a>
+        </div>
+        {% endif %}
+    </div>
+    
+    <!-- Comments Section -->
+    <div class="comments-section">
+        <h2 class="comments-header">
+            <i class="fas fa-comments"></i>
+            Comments ({{ comments.count }})
+        </h2>
+        
+        <!-- Comment Form -->
+        {% if user.is_authenticated %}
+        <div class="comment-form">
+            <form method="post" action="{% url 'blog:add_comment' post.slug %}">
+                {% csrf_token %}
+                {{ comment_form.content }}
+                <button type="submit" class="btn-nav-primary mt-3">
+                    <i class="fas fa-paper-plane me-2"></i>
+                    Post Comment
+                </button>
+            </form>
+        </div>
+        {% else %}
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle me-2"></i>
+            Please <a href="{% url 'accounts:login' %}?next={{ request.path }}">login</a> to leave a comment.
+        </div>
+        {% endif %}
+        
+        <!-- Comments List -->
+        {% for comment in comments %}
+        <div class="comment-item">
+            <div class="comment-header">
+                <div class="comment-avatar">
+                    {{ comment.author.username|slice:":1"|upper }}
+                </div>
+                <div class="flex-grow-1">
+                    <div class="comment-author">{{ comment.author.username }}</div>
+                    <div class="comment-date">{{ comment.created_at|timesince }} ago</div>
+                </div>
+                {% if user == comment.author %}
+                <form method="post" action="{% url 'blog:delete_comment' comment.id %}" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="comment-delete-btn" onclick="return confirm('Delete this comment?')">
+                        <i class="fas fa-trash me-1"></i>Delete
+                    </button>
+                </form>
+                {% endif %}
+            </div>
+            <div class="comment-content">
+                {{ comment.content|linebreaks }}
+            </div>
+        </div>
+        {% empty %}
+        <div class="text-center text-muted py-5">
+            <i class="fas fa-comment-slash fa-3x mb-3" style="opacity: 0.3;"></i>
+            <p>No comments yet. Be the first to share your thoughts!</p>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <!-- Related Posts -->
+    {% if related_posts %}
+    <div class="post-content-wrapper mt-5">
+        <h3 class="mb-4" style="font-family: 'Playfair Display', serif; font-weight: 800;">
+            <i class="fas fa-lightbulb me-2" style="color: var(--primary-color);"></i>
+            You Might Also Like
+        </h3>
+        <div class="row g-4">
+            {% for related in related_posts %}
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100">
+                    {% if related.featured_image %}
+                    <img src="{{ related.featured_image.url }}" class="card-img-top" alt="{{ related.title }}" style="height: 180px; object-fit: cover;">
+                    {% else %}
+                    <div class="card-img-top" style="height: 180px; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-newspaper fa-3x text-white opacity-75"></i>
+                    </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <a href="{% url 'blog:post_detail' related.slug %}" class="text-decoration-none text-dark">
+                                {{ related.title|truncatewords:10 }}
+                            </a>
+                        </h5>
+                        <p class="text-muted small mb-0">
+                            <i class="far fa-clock me-1"></i>
+                            {{ related.reading_time }} min read
+                        </p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    // Like post functionality
+    function likePost(slug) {
+        {% if user.is_authenticated %}
+        fetch(`/post/${slug}/like/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            const likeBtn = document.getElementById('like-btn');
+            const likeCount = document.getElementById('like-count');
+            
+            likeCount.textContent = data.total_likes;
+            
+            if (data.liked) {
+                likeBtn.classList.add('liked');
+            } else {
+                likeBtn.classList.remove('liked');
+            }
+        })
+        .catch(error => console.error('Error:', error));
+        {% else %}
+        window.location.href = '{% url "accounts:login" %}?next={{ request.path }}';
+        {% endif %}
+    }
+    
+    // Social sharing functions
+    const postUrl = window.location.href;
+    const postTitle = "{{ post.title|escapejs }}";
+    
+    function shareOnTwitter() {
+        window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(postUrl)}&text=${encodeURIComponent(postTitle)}`, '_blank', 'width=600,height=400');
+    }
+    
+    function shareOnFacebook() {
+        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(postUrl)}`, '_blank', 'width=600,height=400');
+    }
+    
+    function shareOnLinkedIn() {
+        window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(postUrl)}`, '_blank', 'width=600,height=400');
+    }
+    
+    function shareOnWhatsApp() {
+        window.open(`https://wa.me/?text=${encodeURIComponent(postTitle + ' ' + postUrl)}`, '_blank');
+    }
+</script>
+{% endblock %}

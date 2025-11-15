@@ -1,0 +1,351 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ action }} Post - BlogHub{% endblock %}
+
+{% block extra_css %}
+<style>
+    .form-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        padding: 3rem;
+    }
+    
+    .form-header {
+        font-family: 'Playfair Display', serif;
+        font-size: 2.5rem;
+        font-weight: 900;
+        color: var(--text-dark);
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    .form-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.8rem;
+    }
+    
+    .form-label {
+        font-weight: 600;
+        color: var(--text-dark);
+        margin-bottom: 0.5rem;
+    }
+    
+    .form-control, .form-select {
+        border: 2px solid var(--border-color);
+        border-radius: 10px;
+        padding: 0.8rem 1rem;
+        transition: all 0.3s ease;
+    }
+    
+    .form-control:focus, .form-select:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.1);
+    }
+    
+    .btn-submit {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        border: none;
+        padding: 1rem 2.5rem;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 25px rgba(20, 184, 166, 0.4);
+    }
+    
+    .btn-cancel {
+        background: white;
+        color: var(--text-dark);
+        border: 2px solid var(--border-color);
+        padding: 1rem 2rem;
+        border-radius: 12px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-cancel:hover {
+        border-color: var(--text-dark);
+        background: var(--light-bg);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="form-card">
+                <h1 class="form-header">
+                    <div class="form-icon">
+                        <i class="fas fa-pen-fancy"></i>
+                    </div>
+                    <span>{{ action }} Post</span>
+                </h1>
+                
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="mb-4">
+                        <label for="{{ form.title.id_for_label }}" class="form-label">
+                            <i class="fas fa-heading me-2" style="color: var(--primary-color);"></i>
+                            Post Title
+                        </label>
+                        {{ form.title }}
+                        {% if form.title.errors %}
+                        <div class="text-danger small mt-1">{{ form.title.errors }}</div>
+                        {% endif %}
+                        <small class="form-text text-muted">Make it catchy and descriptive</small>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="{{ form.slug.id_for_label }}" class="form-label">
+                            <i class="fas fa-link me-2" style="color: var(--primary-color);"></i>
+                            URL Slug
+                        </label>
+                        {{ form.slug }}
+                        <small class="form-text text-muted">URL-friendly version (auto-generated from title)</small>
+                        {% if form.slug.errors %}
+                        <div class="text-danger small mt-1">{{ form.slug.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label for="{{ form.category.id_for_label }}" class="form-label">
+                                <i class="fas fa-folder me-2" style="color: var(--primary-color);"></i>
+                                Category
+                            </label>
+                            {{ form.category }}
+                            {% if form.category.errors %}
+                            <div class="text-danger small mt-1">{{ form.category.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-6 mb-4">
+                            <label for="{{ form.status.id_for_label }}" class="form-label">
+                                <i class="fas fa-toggle-on me-2" style="color: var(--primary-color);"></i>
+                                Status
+                            </label>
+                            {{ form.status }}
+                            {% if form.status.errors %}
+                            <div class="text-danger small mt-1">{{ form.status.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="{{ form.tags.id_for_label }}" class="form-label">
+                            <i class="fas fa-tags me-2" style="color: var(--primary-color);"></i>
+                            Tags
+                        </label>
+                        {{ form.tags }}
+                        <small class="form-text text-muted">Hold Ctrl (Cmd on Mac) to select multiple tags</small>
+                        {% if form.tags.errors %}
+                        <div class="text-danger small mt-1">{{ form.tags.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="{{ form.excerpt.id_for_label }}" class="form-label">
+                            <i class="fas fa-align-left me-2" style="color: var(--primary-color);"></i>
+                            Excerpt (Short Description)
+                        </label>
+                        {{ form.excerpt }}
+                        <small class="form-text text-muted">Brief summary shown in post previews</small>
+                        {% if form.excerpt.errors %}
+                        <div class="text-danger small mt-1">{{ form.excerpt.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="{{ form.content.id_for_label }}" class="form-label">
+                            <i class="fas fa-file-alt me-2" style="color: var(--primary-color);"></i>
+                            Content
+                        </label>
+                        {{ form.content }}
+                        {% if form.content.errors %}
+                        <div class="text-danger small mt-1">{{ form.content.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="{{ form.featured_image.id_for_label }}" class="form-label">
+                            <i class="fas fa-image me-2" style="color: var(--primary-color);"></i>
+                            Featured Image
+                        </label>
+                        {{ form.featured_image }}
+                        <small class="form-text text-muted">Recommended size: 1200x630px</small>
+                        {% if form.featured_image.errors %}
+                        <div class="text-danger small mt-1">{{ form.featured_image.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="d-flex gap-3 mt-5">
+                        <button type="submit" class="btn-submit" id="submitBtn" name="submit">
+                            <i class="fas fa-save me-2"></i>
+                            {{ action }} Post
+                        </button>
+                        <a href="{% if post %}{% url 'blog:post_detail' post.slug %}{% else %}{% url 'blog:home' %}{% endif %}" 
+                           class="btn-cancel text-decoration-none">
+                            <i class="fas fa-times me-2"></i>
+                            Cancel
+                        </a>
+                    </div>
+                </form>
+                
+                <!-- Display form errors if any -->
+                {% if form.errors %}
+                <div class="alert alert-danger mt-4">
+                    <h5><i class="fas fa-exclamation-triangle me-2"></i>Please fix the following errors:</h5>
+                    <ul class="mb-0">
+                        {% for field, errors in form.errors.items %}
+                            {% for error in errors %}
+                            <li>{{ field }}: {{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- CKEditor 5 - Best Rich Text Editor -->
+<script src="https://cdn.ckeditor.com/ckeditor5/40.1.0/classic/ckeditor.js"></script>
+<script>
+    // Initialize CKEditor with image support
+    let editor;
+    ClassicEditor
+        .create(document.querySelector('#id_content'), {
+            toolbar: {
+                items: [
+                    'heading', '|',
+                    'bold', 'italic', 'underline', 'strikethrough', '|',
+                    'link', 'imageInsert', 'blockQuote', 'codeBlock', '|',
+                    'bulletedList', 'numberedList', '|',
+                    'outdent', 'indent', '|',
+                    'insertTable', 'mediaEmbed', '|',
+                    'undo', 'redo'
+                ]
+            },
+            image: {
+                toolbar: [
+                    'imageTextAlternative', '|',
+                    'imageStyle:inline', 'imageStyle:block', 'imageStyle:side'
+                ],
+                // Enable image resizing
+                resizeOptions: [
+                    {
+                        name: 'resizeImage:original',
+                        label: 'Original',
+                        value: null
+                    },
+                    {
+                        name: 'resizeImage:50',
+                        label: '50%',
+                        value: '50'
+                    },
+                    {
+                        name: 'resizeImage:75',
+                        label: '75%',
+                        value: '75'
+                    }
+                ]
+            },
+            table: {
+                contentToolbar: [
+                    'tableColumn', 'tableRow', 'mergeTableCells'
+                ]
+            },
+            heading: {
+                options: [
+                    { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
+                    { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
+                    { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' },
+                    { model: 'heading3', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' }
+                ]
+            },
+            // Allow pasting images from clipboard
+            clipboard: {
+                allowedContent: true
+            }
+        })
+        .then(newEditor => {
+            editor = newEditor;
+            console.log('✅ CKEditor loaded! You can now:');
+            console.log('1. Click "Insert Image" button');
+            console.log('2. Paste image URL');
+            console.log('3. Copy-paste images (Ctrl+V)');
+        })
+        .catch(error => {
+            console.error('❌ CKEditor error:', error);
+        });
+    
+    // Auto-generate slug from title
+    const titleInput = document.querySelector('#id_title');
+    const slugInput = document.querySelector('#id_slug');
+    
+    if (titleInput && slugInput) {
+        titleInput.addEventListener('input', function() {
+            // Auto-generate slug from title
+            const slug = this.value
+                .toLowerCase()
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/^-+|-+$/g, '');
+            slugInput.value = slug;
+        });
+    }
+    
+    // Handle form submission
+    const form = document.querySelector('form');
+    const submitBtn = document.getElementById('submitBtn');
+    
+    if (form && submitBtn) {
+        form.addEventListener('submit', function(e) {
+            // Update textarea with CKEditor content
+            if (editor) {
+                document.querySelector('#id_content').value = editor.getData();
+            }
+            
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Saving...';
+        });
+    }
+</script>
+
+<style>
+    /* CKEditor custom styling */
+    .ck-editor__editable {
+        min-height: 400px;
+        max-height: 600px;
+    }
+    
+    .ck.ck-editor {
+        width: 100%;
+    }
+    
+    .ck-content {
+        font-size: 16px;
+        line-height: 1.6;
+    }
+</style>
+{% endblock %}
